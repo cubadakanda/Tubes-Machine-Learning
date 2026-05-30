@@ -7,7 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
-import streamlit as nn  # Menggunakan st untuk Streamlit (standar)
 import streamlit as st
 
 # Mengatur konfigurasi halaman Streamlit
@@ -92,17 +91,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-# =================================================================
-# SECTION 2: UTILITY FUNCTIONS (LOAD DATA & MODELS)
-# =================================================================
-
 @st.cache_resource
-def load_model_and_preprocessor():
+def load_model_and_preprocessor(model_mtime, prep_mtime):
     """Memuat model AdaBoost dan objek preprocessing yang sudah dilatih."""
     model_path = 'models/adaboost_model.pkl'
     prep_path = 'models/preprocessor.pkl'
-    
     if os.path.exists(model_path) and os.path.exists(prep_path):
         model = joblib.load(model_path)
         preprocessor = joblib.load(prep_path)
@@ -114,19 +107,19 @@ def load_datasets():
     """Memuat dataset asli dan dataset terproses."""
     raw_path = 'data/sleep_health.csv'
     processed_path = 'data/sleep_health_preprocessed.csv'
-    
     raw_df = pd.read_csv(raw_path) if os.path.exists(raw_path) else None
     processed_df = pd.read_csv(processed_path) if os.path.exists(processed_path) else None
     return raw_df, processed_df
 
 # Load Model dan Data
-model, preprocessor = load_model_and_preprocessor()
+model_path = 'models/adaboost_model.pkl'
+prep_path = 'models/preprocessor.pkl'
+model_mtime = os.path.getmtime(model_path) if os.path.exists(model_path) else 0
+prep_mtime = os.path.getmtime(prep_path) if os.path.exists(prep_path) else 0
+
+model, preprocessor = load_model_and_preprocessor(model_mtime, prep_mtime)
 df_raw, df_processed = load_datasets()
 
-
-# =================================================================
-# SIDEBAR NAVIGATION
-# =================================================================
 
 # Cek apakah model utama sudah ditraining
 if model is None or preprocessor is None or df_raw is None:
