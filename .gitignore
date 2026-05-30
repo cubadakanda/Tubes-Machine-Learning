@@ -7,3 +7,7 @@ __pycache__/
 .ipynb_checkpoints/
 .vscode/
 .idea/
+
+# Laporan Akhir (Local only)
+laporan_proyek_akhir.md
+laporan_proyek_akhir.docx
